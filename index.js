@@ -1,10 +1,14 @@
-"use strict";
+'use strict';
 
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 8000;
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+const port = process.env.PORT || 3000;
+require('./socketserver.js')(io, app);
 
 app.set('view engine', 'hbs');
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -13,5 +17,10 @@ app.get('/chat',(req,res)=>{
   res.render('chat');
 })
 
-app.listen(port);
-console.log(`Server is runnning at ${port}`);
+app.get('/chat', (req, res) => {
+  res.render('chat');
+});
+
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
