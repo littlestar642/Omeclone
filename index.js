@@ -17,10 +17,6 @@ app.get('/chat',(req,res)=>{
   res.render('chat');
 });
 
-app.get('/chat', (req, res) => {
-  res.render('chat');
-});
-
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
