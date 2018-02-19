@@ -2,7 +2,7 @@
 
 const utils = require('./utils.js');
 const uniqueID = require('uniqid');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const autolinker = require('autolinker');
 
 // This is our socket server. All the events socket events will go here.
@@ -55,8 +55,9 @@ module.exports = (io, app) => {
     });
 
     socket.on('sendMessage', (data) => {
-    let timeStamp = moment().format('LT');
-    io.sockets.in(data.room).emit('newMessage', { "message": autolinker.link(data.message,{ stripPrefix:false }) , "senderId": socket.id, "timeStamp": timeStamp});
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      let timeStamp = moment.tz(timeZone).format('LT');
+      io.sockets.in(data.room).emit('newMessage', { "message": autolinker.link(data.message,{ stripPrefix:false }) , "senderId": socket.id, "timeStamp": timeStamp});
     });
 
     // Disconnect the user
